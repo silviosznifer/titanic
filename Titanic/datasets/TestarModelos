@@ -1,0 +1,34 @@
+Hipóteses e observações:
+- Morreram mais pessoas do que sobreviveram
+- Morreram mais homens que mulheres
+- Pclass: exponemcailmente morreram mais pessoas de classes inferiores
+- MOrreram mais pessoas da faixa entre 23 e 28 anos
+- Fare: morreram muitos de tarifas baixas
+- Cabin: morreram muito mais os sem cabine
+
+A fazer:
+- juntar parentes em um campo somado [ok]
+- transformar o campo Cabin em numérico de acordo com a letra (as cabines variam de A - mais alto, até U - mais profundo) deck = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "U": 8}
+- Detectou no nome os títulos - titles = {"Mr": 1, "Miss": 2, "Mrs": 3, "Master": 4, "Rare": 5}
+- Age, transformou os missing em um núnmero aleatório entre a media e o desvio padrão; [ok - usei só a  média]
+- Transformar sex mn Numérico genders = {"male": 0, "female": 1} [ok]
+- Removeu o ticket [ok]
+- Completou o embarked com o que tem mais [ok]
+- Transformar o embarked em numérico ports = {"S": 0, "C": 1, "Q": 2} [ok]
+
+
+Testar
+- NB: 72%
+- RF: 73%
+- J48: 69%
+- NB ou RF ou J48: 72%
+- MultlayerPerceptron: 62%
+- SimpleLogistic:
+- PART: 62%
+- DecisionTable:
+- JRip: 64%
+- ClassificationViaRegression: 65%
+- NB sem ID: 73%
+- KStar sem ID: 69%
+- MultlayerPerceptron sem ID: 69%
+- RandomTree: 72%
