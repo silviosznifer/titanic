@@ -5,6 +5,7 @@ import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.lazy.KStar;
 import weka.classifiers.meta.ClassificationViaRegression;
+import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.rules.JRip;
 import weka.classifiers.rules.PART;
 import weka.classifiers.trees.J48;
@@ -17,7 +18,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class ModeloTitanic {
 	private Instances instancias;
-	private DataSource ds = new DataSource("datasets/titanic_tratado.arff");
+	private DataSource ds = new DataSource("datasets/titanic_tratado_70.arff");
 	
 	public ModeloTitanic() throws Exception {
 		this.instancias = ds.getDataSet();
@@ -47,6 +48,9 @@ public class ModeloTitanic {
 		Instance novo = this.novaInstancia(novaInstancia);
 		
 		J48 m = new J48();
+		m.setNumFolds(20);
+		m.setReducedErrorPruning(true);
+		m.setUnpruned(false);
 		m.buildClassifier(this.instancias);
 		
 		double resultado[] = m.distributionForInstance(novo);
@@ -110,6 +114,8 @@ public class ModeloTitanic {
 		Instance novo = this.novaInstancia(novaInstancia);
 		
 		JRip m = new JRip();
+		m.setUsePruning(false);
+		m.setFolds(4);
 		m.buildClassifier(this.instancias);
 		
 		double resultado[] = m.distributionForInstance(novo);
@@ -153,6 +159,37 @@ public class ModeloTitanic {
 	
 	}
 	
+	public String classificarFilteredClassifier(String novaInstancia) throws Exception {
+		
+		Instance novo = this.novaInstancia(novaInstancia);
+		
+		FilteredClassifier m = new FilteredClassifier();
+		
+		weka.filters.supervised.attribute.Discretize d = new weka.filters.supervised.attribute.Discretize();
+		d.setInvertSelection(true);
+		d.setBinRangePrecision(6);
+		
+		m.setBatchSize("100");
+		m.setFilter(d);		
+		m.setNumDecimalPlaces(2);
+		m.setSeed(1);
+		
+		weka.classifiers.trees.J48 j48 = new weka.classifiers.trees.J48();
+		j48.setMinNumObj(2);
+		j48.setConfidenceFactor((float)0.25);
+		// weka.classifiers.meta.FilteredClassifier -F "weka.filters.supervised.attribute.Discretize -R first-last -precision 6" -S 1 -W weka.classifiers.trees.J48 -- -C 0.25 -M 2		
+		m.setClassifier(j48);
+		m.buildClassifier(this.instancias);
+		
+		double resultado[] = m.distributionForInstance(novo);
+		
+		//System.out.println(resultado.length + " - " + resultado[0] + " - " + resultado[1]);
+		
+		if (resultado[1] > resultado[0]) return "S";
+		else return "N";
+	
+	}
+	
 	public String classificarRandomTree(String novaInstancia) throws Exception {
 		
 		Instance novo = this.novaInstancia(novaInstancia);
@@ -174,7 +211,7 @@ public class ModeloTitanic {
 		
 		//System.out.println(resultado.length + " - " + resultado[0] + " - " + resultado[1]);
 		
-		if (resultado[1] > resultado[0]) return "S";
+		if (resultado[1] > 0.75) return "S";
 		else return "N";
 	
 	}
@@ -210,9 +247,9 @@ public class ModeloTitanic {
 		novo.setValue(6, p.getFare());
 		novo.setValue(7, p.getCabin());
 		novo.setValue(8, p.getEmbarked());
-		//novo.setValue(9, p.getAge_Pclass());
-		//novo.setValue(10, p.getFare_por_pessoa());
-		//novo.setValue(11, p.getTitulo());
+		novo.setValue(9, p.getAge_Pclass());
+		novo.setValue(10, p.getFare_por_pessoa());
+		novo.setValue(11, p.getTitulo());
 		
 		return novo;
 		

@@ -13,7 +13,7 @@ public class TratarCSVTreino {
 	public static void main(String[] args) throws IOException {
 		
 		String linha;
-		String arquivoCSV = "datasets/train.csv";
+		String arquivoCSV = "datasets/test_70.csv";
 		String documento = "";
 		
 		PassageiroCSV p;
@@ -28,8 +28,8 @@ public class TratarCSVTreino {
 		
 		
         while ((linha = br.readLine()) != null) {
-        	
-        	if (linha != null) {
+        	  	
+        	if (linha != null && !linha.isBlank() && !linha.isEmpty()) {
         		p = new PassageiroCSV(linha);
         		//System.out.println(p.toStringCSVTratado());	
         		documento += p.toStringCSVTreinoTratado() + "\n";

@@ -9,7 +9,7 @@ public class Treinador {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Ler do CSV
-		String arquivoCSV = "datasets/test_tratado.csv";
+		String arquivoCSV = "datasets/test_tratado_30.csv";
 		String linha;
 		String resultado = "";
 		
@@ -23,11 +23,14 @@ public class Treinador {
         		System.out.print(linha.split(",")[0]+",");
         		
         		//resultado = m.classificarNaiveBayes(linha);
-        		//resultado  = m.classificarJ48(linha);
+        		// resultado  = m.classificarJ48(linha);
+        		
+        		resultado  = m.classificarFilteredClassifier(linha);        		
+        		
         		//System.out.println(linha);
         		
         		//resultado = m.classificarRandomForest(linha);
-        		resultado = m.classificarRandomTree(linha);
+        		//resultado = m.classificarRandomTree(linha);
         		
         		//resultado = m.classificarMultilayerPerceptron(linha);
         		
